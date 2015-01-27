@@ -12,6 +12,14 @@ module.exports = function(grunt) {
         dest: 'build/<%= pkg.name %>.min.js'
       }
     },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: ['test/*.js', 'tests/**/*.js']
+      }
+    },
     jshint: {
       options: {
         curly: true,
@@ -54,6 +62,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
   // A very basic default task.
   grunt.registerTask('custom', 'My custom grunt task.', function() {

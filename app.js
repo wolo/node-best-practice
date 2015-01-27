@@ -7,10 +7,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // Database
-var mongo = require('mongoskin');
-var db = mongo.db("mongodb://localhost:27017/mongo_rest", {
-    native_parser: true
-});
+var userModel = require("./models/user");
+var mongo_url = "mongodb://localhost:27017/mongo_rest";
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -33,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Make our db accessible to our router
 app.use(function (req, res, next) {
-    req.db = db;
+    req.model = userModel(mongo_url);
     next();
 });
 
@@ -54,6 +52,7 @@ app.use(function (req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         res.status(err.status || 500);
+        console.log(err.stack);
         res.render('error', {
             message: err.message,
             error: err
@@ -65,6 +64,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
     res.status(err.status || 500);
+    console.log(err.stack);
     res.render('error', {
         message: err.message,
         error: {}
