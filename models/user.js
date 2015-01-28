@@ -6,44 +6,60 @@ module.exports = function(url) {
 
     var close = function() {};
 
-    var withCollection = function(fn) {
+    var withCollection = function(callback) {
         var options = { db: { native_parser: true } };
         MongoClient.connect(url, options, function(err, db){
-            if(err) throw err;
+            if(err)
+                callback(err);
+            else {
+                close = function() {
+                    db.close();
+                }
 
-            close = function() {
-                db.close();
+                callback(null, db.collection("users"));
             }
-
-            fn(db.collection("users"));
-
         });
     }
 
     return {
         getAll: function(callback) {
-            withCollection(function(collection){
-                collection.find({}).toArray(callback);
+            withCollection(function(err, collection){
+                if(err)
+                    callback(err);
+                else
+                    collection.find({}).toArray(callback);
             });
         },
         get: function(userId, callback) {
-            withCollection(function(collection){
-                collection.findOne({ "_id": ObjectID(userId) }, callback);
+            withCollection(function(err, collection){
+                if(err)
+                    callback(err);
+                else
+                    collection.findOne({ "_id": ObjectID(userId) }, callback);
             });
         },
         add: function(userData, callback) {
-            withCollection(function(collection){
-                collection.insert(userData, callback);
+            withCollection(function(err, collection){
+                if(err)
+                    callback(err);
+                else
+                    collection.insert(userData, callback);
             });
         },
         delete: function(userId, callback) {
-            withCollection(function(collection){
-                collection.remove({_id: ObjectID(userId)}, callback);
+            withCollection(function(err, collection){
+                if(err)
+                    callback(err);
+                else
+                    collection.remove({_id: ObjectID(userId)}, callback);
             });
         },
         clean: function(callback) {
-            withCollection(function(collection){
-                collection.remove({}, callback);
+            withCollection(function(err, collection){
+                if(err)
+                    callback(err);
+                else
+                    collection.remove({}, callback);
             });
         },
         close: function() {
