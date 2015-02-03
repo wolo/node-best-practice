@@ -3,3 +3,5 @@
 /setenv.cmd
 /passwords.txt
 /mongosoup.cmd
+/heroku_config.cmd
+/coverage

@@ -22,9 +22,11 @@
     "grunt-contrib-nodeunit": "~0.4.1",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-mocha-test": "*",
+    "grunt-mocha-istanbul": "*",
     "grunt-shell": "*",
     "chai": "*",
-    "mocha": "*"
+    "mocha": "*",
+    "istanbul": "*"
   },
   "engines": {
     "node": ">=0.10.0"

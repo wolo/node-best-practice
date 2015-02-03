@@ -20,6 +20,27 @@ module.exports = function(grunt) {
         src: ['test/*.js', 'tests/**/*.js']
       }
     },
+    mocha_istanbul: {
+      coverage: {
+        src: 'test',
+        options: {
+            mask: '*.js'
+        }
+      },
+    },
+    istanbul_check_coverage: {
+      default: {
+        options: {
+          coverageFolder: 'coverage*', // will check all coverage folders and merge the coverage results
+          check: {
+            lines: 80,
+            statements: 80,
+            branches: 50,
+            lines: 80
+          }
+        }
+      }
+    },
     jshint: {
       options: {
         curly: false,
@@ -71,6 +92,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-mocha-istanbul');
   grunt.loadNpmTasks('grunt-shell');
 
   // A very basic default task.
@@ -79,8 +101,9 @@ module.exports = function(grunt) {
   });
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'mochaTest']);
+  grunt.registerTask('test', ['mocha_istanbul:coverage', 'istanbul_check_coverage']);
+  grunt.registerTask('default', ['jshint', 'test']);
 
-  grunt.registerTask('deploy', ['default', 'mochaTest', 'shell:deploy_on_heroku']);
+  grunt.registerTask('deploy', ['default', 'shell:deploy_on_heroku']);
 
 };

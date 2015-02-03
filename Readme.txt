@@ -8,12 +8,12 @@ Already included:
 - MongoDB back-end (hosted by MongoSoup)
 - static code analysis (lshint)
 - logging (winston)
+- deploy on heroku
+- configuration management (development/staging/live - using environment variables)
+- code coverage test (istanbul)
 
 Still missing:
-- configuration management (development/staging/live)
-- code coverage test
 - unit test (client code)
-- deploy on heroku
 - deploy with docker
 - deplay on cloudControl
 - deploy to Azure/AWS/Google
