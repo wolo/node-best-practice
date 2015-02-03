@@ -12,7 +12,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 // Database
 var userModel = require("./models/user");
-var mongo_url = "mongodb://localhost:27017/mongo_rest";
+
+var mongoUrl = process.env.MONGO_URL;
+if (!mongoUrl) {
+    throw new Error("Missing environment MONGO_URL");
+}
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -23,8 +27,9 @@ var app = express();
 
 // configure the access log file
 var logDir = path.join(__dirname, 'log');
-if(!fs.existsSync(logDir))
+if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir);
+}
 var accessLogStream = fs.createWriteStream(path.join(logDir, '/access.log'), {flags: 'a'});
 
 // view engine setup
@@ -42,7 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Make our db accessible to our router
 app.use(function (req, res, next) {
-    req.model = userModel(mongo_url);
+    req.model = userModel(mongoUrl);
     next();
 });
 
@@ -83,6 +88,6 @@ app.use(function (err, req, res, next) {
     });
 });
 
-app.use(morgan('combined', {stream: accessLogStream}))
+app.use(morgan('combined', {stream: accessLogStream}));
 
 module.exports = app;

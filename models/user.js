@@ -2,6 +2,8 @@
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
 
+/* jshint newcap: false */
+
 module.exports = function(url) {
 
     var close = function() {};
@@ -9,17 +11,18 @@ module.exports = function(url) {
     var withCollection = function(callback) {
         var options = { db: { native_parser: true } };
         MongoClient.connect(url, options, function(err, db){
-            if(err)
+            if(err) {
                 callback(err);
+            }
             else {
                 close = function() {
                     db.close();
-                }
+                };
 
                 callback(null, db.collection("users"));
             }
         });
-    }
+    };
 
     return {
         getAll: function(callback) {
@@ -55,6 +58,7 @@ module.exports = function(url) {
             });
         },
         clean: function(callback) {
+            console.log("model.clean");
             withCollection(function(err, collection){
                 if(err)
                     callback(err);

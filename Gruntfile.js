@@ -22,7 +22,7 @@ module.exports = function(grunt) {
     },
     jshint: {
       options: {
-        curly: true,
+        curly: false,
         eqeqeq: true,
         eqnull: true,
         globals: {
@@ -33,6 +33,9 @@ module.exports = function(grunt) {
         src: [
           'app.js',
           'routes/*.js',
+          'models/*.js',
+          'resources/*.js',
+          'tests/*.js'
         ],
         exclude: [
           'server/config.js'
@@ -57,12 +60,18 @@ module.exports = function(grunt) {
           ]
         }
       }
+    },
+    shell: {
+      deploy_on_heroku: {
+        command: 'git push heroku master'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-shell');
 
   // A very basic default task.
   grunt.registerTask('custom', 'My custom grunt task.', function() {
@@ -70,6 +79,8 @@ module.exports = function(grunt) {
   });
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default', ['jshint', 'mochaTest']);
+
+  grunt.registerTask('deploy', ['default', 'mochaTest', 'shell:deploy_on_heroku']);
 
 };

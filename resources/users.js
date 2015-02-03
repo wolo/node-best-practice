@@ -27,7 +27,7 @@ module.exports = {
     "post": {
         "/": function (req, res, next) {
             req.model.add(req.body, function (err, result) {
-                returnResult(req.model, { msg: 'ok' }, err, item, next);
+                returnResult(req.model, res, err, { msg: 'ok' }, next);
             });
         }
     },
@@ -36,7 +36,7 @@ module.exports = {
         "/:id": function (req, res, next) {
             var userId = req.params.id;
             req.model.delete(userId, function (err, result) {
-                returnResult(req.model, { msg: 'ok' }, err, item, next);
+                returnResult(req.model, res, err, { msg: 'ok' }, next);
             });
         }
     }

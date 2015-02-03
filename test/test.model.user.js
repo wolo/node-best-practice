@@ -2,8 +2,11 @@ var http = require('http');
 var should = require("chai").should();
 var userModel = require("../models/user");
 
-var url = "mongodb://localhost:27017/mongo_test";
-var model = userModel(url);
+var mongoUrl = process.env.MONGO_TEST_URL;
+if(!mongoUrl)
+    throw new Error("Missing environment MONGO_TEST_URL");
+
+var model = userModel(mongoUrl);
 
 var userData = {
     'username': "ttester",
@@ -30,7 +33,11 @@ describe("User model", function(){
             model.clean(function(err, result){
                 if(err) throw err;
 
-                model.add(userData, function() {
+                console.log("add");
+
+                model.add(userData, function(err) {
+                    if(err) throw err;
+
                     model.getAll(function(err, docs){
                         if(err) throw err;
 
